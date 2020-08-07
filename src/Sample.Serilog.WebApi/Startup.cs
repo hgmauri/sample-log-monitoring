@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sample.Serilog.WebApi.Core.Extensions;
+using Sample.Serilog.WebApi.Core.Middleware;
 using Serilog;
 
 namespace Sample.Serilog.WebApi
@@ -34,6 +35,8 @@ namespace Sample.Serilog.WebApi
             }
 
             app.UseSerilogRequestLogging(opts => opts.EnrichDiagnosticContext = LogEnricherExtensions.EnrichFromRequest);
+
+            app.UseMiddleware<RequestSerilLogContextMiddleware>();
 
             app.UseSwaggerDoc();
 

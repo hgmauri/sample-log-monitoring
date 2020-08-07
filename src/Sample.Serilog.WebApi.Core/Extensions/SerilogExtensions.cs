@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Filters;
@@ -13,13 +16,12 @@ namespace Sample.Serilog.WebApi.Core.Extensions
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
-                .Enrich.WithProperty("ApplicationName", "API Exemplo Serilog")
+                .Enrich.WithProperty("ApplicationName", $"API Exemplo - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}")
                 .Enrich.FromLogContext()
+                .WriteTo.LiterateConsole()
                 .Enrich.WithMachineName()
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithExceptionDetails()
-                .WriteTo.LiterateConsole()
-                .WriteTo.Debug()
                 //.Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticsearchSettings:uri"]))
                 {
@@ -27,8 +29,14 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                     IndexFormat = "logs",
                     ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
                 })
-                .WriteTo.Console()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
                 .CreateLogger();
+        }
+
+        public static string GetCorrelationId(this HttpContext httpContext)
+        {
+            httpContext.Request.Headers.TryGetValue("Cko-Correlation-Id", out StringValues correlationId);
+            return correlationId.FirstOrDefault() ?? httpContext.TraceIdentifier;
         }
     }
 }
