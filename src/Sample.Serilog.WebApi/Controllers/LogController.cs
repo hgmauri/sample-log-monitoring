@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System;
 
 namespace Sample.Serilog.WebApi.Controllers

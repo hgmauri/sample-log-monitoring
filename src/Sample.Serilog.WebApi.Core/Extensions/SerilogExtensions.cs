@@ -18,17 +18,17 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                 .ReadFrom.Configuration(configuration)
                 .Enrich.WithProperty("ApplicationName", $"API Exemplo - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}")
                 .Enrich.FromLogContext()
-                .WriteTo.LiterateConsole()
                 .Enrich.WithMachineName()
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithExceptionDetails()
-                //.Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
+                .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticsearchSettings:uri"]))
                 {
                     AutoRegisterTemplate = true,
                     IndexFormat = "logs",
                     ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
                 })
+                .WriteTo.LiterateConsole()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
                 .CreateLogger();
         }
