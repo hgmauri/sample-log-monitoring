@@ -8,7 +8,7 @@ namespace Sample.Serilog.WebApi.Core.Extensions
 {
     public static class SwaggerExtensions
     {
-        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+        public static void AddSwaggerApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSwaggerGen(c =>
             {
@@ -17,7 +17,7 @@ namespace Sample.Serilog.WebApi.Core.Extensions
             });
         }
 
-        public static void UseSwaggerDoc(this IApplicationBuilder app)
+        public static void UseSwaggerDocApi(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>

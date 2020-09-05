@@ -12,7 +12,7 @@ namespace Sample.Serilog.WebApi.Core.Extensions
 {
     public static class SerilogExtensions
     {
-        public static void AddSerilog(IConfiguration configuration)
+        public static void AddSerilogApi(IConfiguration configuration)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)

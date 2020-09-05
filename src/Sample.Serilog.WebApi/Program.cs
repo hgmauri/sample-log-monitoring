@@ -19,7 +19,7 @@ namespace Sample.Serilog.WebApi
 
         public static void Main(string[] args)
         {
-            SerilogExtensions.AddSerilog(Configuration);
+            SerilogExtensions.AddSerilogApi(Configuration);
 
             try
             {

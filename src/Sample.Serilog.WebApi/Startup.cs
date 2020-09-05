@@ -1,17 +1,13 @@
 using System;
-using System.Linq;
-using System.Net.Mime;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Sample.Serilog.WebApi.Core.Extensions;
+using Sample.Serilog.WebApi.Core.HealthCheck;
 using Sample.Serilog.WebApi.Core.Middleware;
 using Serilog;
 
@@ -30,13 +26,13 @@ namespace Sample.Serilog.WebApi
         {
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddSwagger(Configuration);
+            services.AddSwaggerApi(Configuration);
 
-            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
-
-            services.AddHealthChecksUI().AddInMemoryStorage();
+            services.AddHeathCheckApi();
 
             services.AddControllers();
+
+            services.AddScoped<IMyCustomService, MyCustomService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -50,27 +46,23 @@ namespace Sample.Serilog.WebApi
 
             app.UseMiddleware<RequestSerilLogContextMiddleware>();
 
-            app.UseSwaggerDoc();
+            app.UseSwaggerDocApi();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseHealthChecksUI(config =>
-            {
-                config.UIPath = "/hc-ui";
-            });
-
-            // Ativa o dashboard para a visualização da situação de cada Health Check
-            app.UseHealthChecksUI();
+            app.UseHealthCheckApi();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Contains("self")
-                });
+                endpoints.MapHealthChecks("/health",
+                    new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
             });
         }
     }
