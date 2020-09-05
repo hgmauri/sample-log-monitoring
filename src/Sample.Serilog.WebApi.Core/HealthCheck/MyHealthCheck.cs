@@ -33,7 +33,6 @@ namespace Sample.Serilog.WebApi.Core.HealthCheck
 
     public class MyCustomService : IMyCustomService
     {
-
         public bool IsHealthy()
         {
             return new Random().NextDouble() > 0.5;

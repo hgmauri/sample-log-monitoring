@@ -28,7 +28,7 @@ namespace Sample.Serilog.WebApi
 
             services.AddSwaggerApi(Configuration);
 
-            services.AddHeathCheckApi();
+            services.AddHeathCheckApi(Configuration);
 
             services.AddControllers();
 

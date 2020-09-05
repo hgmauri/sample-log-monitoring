@@ -26,7 +26,8 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                 {
                     AutoRegisterTemplate = true,
                     IndexFormat = "logs",
-                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], 
+                        configuration["ElasticsearchSettings:password"])
                 })
                 .WriteTo.LiterateConsole()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
