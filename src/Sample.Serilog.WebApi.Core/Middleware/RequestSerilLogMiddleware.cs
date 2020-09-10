@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Sample.Serilog.WebApi.Core.Middleware
 {
-    public class RequestSerilLogContextMiddleware
+    public class RequestSerilLogMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public RequestSerilLogContextMiddleware(RequestDelegate next)
+        public RequestSerilLogMiddleware(RequestDelegate next)
         {
             _next = next;
         }

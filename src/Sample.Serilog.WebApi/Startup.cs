@@ -44,7 +44,8 @@ namespace Sample.Serilog.WebApi
 
             app.UseSerilogRequestLogging(opts => opts.EnrichDiagnosticContext = LogEnricherExtensions.EnrichFromRequest);
 
-            app.UseMiddleware<RequestSerilLogContextMiddleware>();
+            app.UseMiddleware<RequestSerilLogMiddleware>();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseSwaggerDocApi();
 
