@@ -18,8 +18,6 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                     configuration.GetConnectionString("DefaultConnection"), "SELECT 1;", "Sql Server", HealthStatus.Degraded, timeout: TimeSpan.FromSeconds(30), tags: new[] { "db", "sql", "sqlServer", })
                 .AddRedis(
                     configuration.GetConnectionString("RedisConnection"), "Redis", HealthStatus.Degraded, new[] { "redis", "cache" })
-                //.AddRabbitMQ(
-                //    configuration.GetConnectionString("RabbitMQ"), null, "RabbitMQ", HealthStatus.Degraded, new[] { "rabbitmq", "queue", "message", "broker" })
                 .AddElasticsearch(
                     configuration.GetConnectionString("Elasticsearch"), "ElasticSearch", HealthStatus.Degraded, new[] { "elastic", "search" });
 
@@ -27,7 +25,12 @@ namespace Sample.Serilog.WebApi.Core.Extensions
             {
                 config.AddHealthCheckEndpoint("Host Externo", ObterHostNameApiHealthCheck());
                 config.AddHealthCheckEndpoint("Meu GitHub", $"http://github.com/hgmauri");
-                config.AddHealthCheckEndpoint("Aplicação", $"http://localhost:5001/health");
+                config.AddHealthCheckEndpoint("Aplicação", $"http://localhost:5001/hc");
+
+                config.AddWebhookNotification("Slack Notification WebHook", "Your_Slack_WebHook_Uri_Goes_Here",
+                                            "{\"text\": \"[[LIVENESS]] is failing with the error message : [[FAILURE]]\"}",
+                                            "{\"text\": \"[[LIVENESS]] is recovered.All is up & running !\"}");
+
             }).AddInMemoryStorage();
         }
 
@@ -35,15 +38,14 @@ namespace Sample.Serilog.WebApi.Core.Extensions
         {
             app.UseHealthChecksUI(config =>
             {
-                config.UIPath = "/hc";
+                config.UIPath = "/hc-ui";
             });
-
-            app.UseHealthChecksUI();
         }
 
         public static string ObterHostNameApiHealthCheck()
         {
-            return Environment.GetEnvironmentVariable("HostNameHealthCheck") == null ? "/api/health" : $"{Environment.GetEnvironmentVariable("HostNameHealthCheck")}/api/health";
+            var tt = Environment.GetEnvironmentVariable("HostNameHealthCheck") == null ? "/api/hc" : $"{Environment.GetEnvironmentVariable("HostNameHealthCheck")}/api/hc";
+            return tt;
         }
     }
 }

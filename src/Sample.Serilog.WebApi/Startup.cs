@@ -1,4 +1,3 @@
-using System;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -58,7 +57,7 @@ namespace Sample.Serilog.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health",
+                endpoints.MapHealthChecks("/hc",
                     new HealthCheckOptions
                     {
                         Predicate = _ => true,

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Sample.Serilog.WebApi.Core.Extensions;
 using Serilog.Context;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sample.Serilog.WebApi.Core.Middleware
@@ -17,10 +19,16 @@ namespace Sample.Serilog.WebApi.Core.Middleware
         public Task Invoke(HttpContext context)
         {
             using (LogContext.PushProperty("UserName", context?.User?.Identity?.Name ?? "anônimo"))
-            using (LogContext.PushProperty("CorrelationId", context.GetCorrelationId()))
+            using (LogContext.PushProperty("CorrelationId", GetCorrelationId(context)))
             {
                 return _next.Invoke(context);
             }
+        }
+
+        private string GetCorrelationId(HttpContext httpContext)
+        {
+            httpContext.Request.Headers.TryGetValue("Cko-Correlation-Id", out StringValues correlationId);
+            return correlationId.FirstOrDefault() ?? httpContext.TraceIdentifier;
         }
     }
 }

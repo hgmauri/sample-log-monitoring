@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Filters;
@@ -26,18 +24,13 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                 {
                     AutoRegisterTemplate = true,
                     IndexFormat = "logs",
-                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], 
-                        configuration["ElasticsearchSettings:password"])
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
                 })
+                .WriteTo.Seq(configuration["Seq:uri"])
+                .WriteTo.ApplicationInsights(TelemetryConfiguration.Active, TelemetryConverter.Traces)
                 .WriteTo.LiterateConsole()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
                 .CreateLogger();
-        }
-
-        public static string GetCorrelationId(this HttpContext httpContext)
-        {
-            httpContext.Request.Headers.TryGetValue("Cko-Correlation-Id", out StringValues correlationId);
-            return correlationId.FirstOrDefault() ?? httpContext.TraceIdentifier;
         }
     }
 }

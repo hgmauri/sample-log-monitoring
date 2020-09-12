@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Serilog;
 using System;
 
 namespace Sample.Serilog.WebApi.Controllers
@@ -23,34 +22,11 @@ namespace Sample.Serilog.WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("name")]
+        [HttpGet("exception")]
         public IActionResult GetByName([FromQuery] string name)
         {
-            return Ok();
+            throw new Exception("Não foi possível fazer o get.");
         }
 
-        [HttpGet("description")]
-        public IActionResult GetByDescription([FromQuery] string description)
-        {
-            return Ok();
-        }
-
-        [HttpGet("condiction")]
-        public IActionResult GetByCondictions([FromQuery] string name, [FromQuery] string description, [FromQuery] DateTime? birthdate)
-        {
-            return Ok();
-        }
-
-        [HttpGet("term")]
-        public IActionResult GetByAllCondictions([FromQuery] string term)
-        {
-            return Ok();
-        }
-
-        [HttpGet("aggregation")]
-        public IActionResult GetActorsAggregation()
-        {
-            return Ok();
-        }
     }
 }
