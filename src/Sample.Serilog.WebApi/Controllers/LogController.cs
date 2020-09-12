@@ -16,14 +16,8 @@ namespace Sample.Serilog.WebApi.Controllers
             return Ok(new { Result = "Data successfully registered with Elasticsearch" });
         }
 
-        [HttpGet("")]
-        public IActionResult GetAll()
-        {
-            return Ok();
-        }
-
         [HttpGet("exception")]
-        public IActionResult GetByName([FromQuery] string name)
+        public IActionResult GetByName()
         {
             throw new Exception("Não foi possível fazer o get.");
         }
