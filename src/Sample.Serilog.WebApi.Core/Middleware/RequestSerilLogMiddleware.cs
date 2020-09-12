@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Sample.Serilog.WebApi.Core.Extensions;
 using Serilog.Context;
 using System.Linq;
 using System.Threading.Tasks;

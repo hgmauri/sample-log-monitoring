@@ -18,13 +18,15 @@ namespace Sample.Serilog.WebApi.Core.Extensions
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .Enrich.WithEnvironmentUserName()
-                .Enrich.WithExceptionDetails()
+                .Enrich.WithDemystifiedStackTraces()
                 .Filter.ByExcluding(Matching.FromSource("Microsoft.AspNetCore.StaticFiles"))
+                .Filter.ByExcluding(z => z.MessageTemplate.Text.Contains("erro de negócio"))
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticsearchSettings:uri"]))
                 {
                     AutoRegisterTemplate = true,
                     IndexFormat = "logs",
-                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], configuration["ElasticsearchSettings:password"])
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticsearchSettings:username"], 
+                    configuration["ElasticsearchSettings:password"])
                 })
                 .WriteTo.Seq(configuration["Seq:uri"])
                 .WriteTo.ApplicationInsights(TelemetryConfiguration.Active, TelemetryConverter.Traces)
