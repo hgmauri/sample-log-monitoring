@@ -19,6 +19,7 @@ namespace Sample.Serilog.WebApi.Controllers
         [HttpGet("exception")]
         public IActionResult GetByName()
         {
+            //Sample middlerare exception log
             throw new Exception("Não foi possível fazer o get.");
         }
 

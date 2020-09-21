@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+
 EXPOSE 80
 EXPOSE 443
 
@@ -17,6 +18,15 @@ FROM build AS publish
 RUN dotnet publish "Sample.Serilog.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
+
+ENV TZ=America/Sao_Paulo
+ENV LANG pt-BR
+ENV LANGUAGE pt-BR
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 WORKDIR /app
+
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Sample.Serilog.WebApi.dll"]
+ENV ASPNETCORE_URLS=http://+:80
+
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet Sample.Serilog.WebApi.dll
