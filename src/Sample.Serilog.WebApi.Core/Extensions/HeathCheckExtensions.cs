@@ -23,6 +23,7 @@ namespace Sample.Serilog.WebApi.Core.Extensions
 
             services.AddHealthChecksUI(config =>
             {
+                config.SetEvaluationTimeInSeconds(5);
                 config.AddHealthCheckEndpoint("Host Externo", ObterHostNameApiHealthCheck());
                 config.AddHealthCheckEndpoint("Meu GitHub", $"http://github.com/hgmauri");
                 config.AddHealthCheckEndpoint("Aplicação", $"http://localhost:5001/hc");

@@ -61,7 +61,7 @@ namespace Sample.Serilog.WebApi
                     new HealthCheckOptions
                     {
                         Predicate = _ => true,
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
                     });
             });
         }
