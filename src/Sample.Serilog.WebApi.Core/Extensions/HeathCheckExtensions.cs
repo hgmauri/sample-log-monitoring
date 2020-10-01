@@ -25,7 +25,6 @@ namespace Sample.Serilog.WebApi.Core.Extensions
             {
                 config.SetEvaluationTimeInSeconds(5);
                 config.AddHealthCheckEndpoint("Host Externo", ObterHostNameApiHealthCheck());
-                config.AddHealthCheckEndpoint("Meu GitHub", $"http://github.com/hgmauri");
                 config.AddHealthCheckEndpoint("Aplicação", $"http://localhost:5001/hc");
 
                 config.AddWebhookNotification("Slack Notification WebHook", "Your_Slack_WebHook_Uri_Goes_Here",
