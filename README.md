@@ -1,4 +1,4 @@
-# .NET 5 Monitoring and Logging Example
+# .NET 5 Logging and Monitoring Example
 
 - .NET 5.0
 - Health Check
