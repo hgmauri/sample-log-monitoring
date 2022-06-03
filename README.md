@@ -1,6 +1,6 @@
-# .NET 5 Logging and Monitoring Example
+# .NET 6 Logging and Monitoring Example
 
-- .NET 5.0
+- .NET 6.0
 - Health Check
 - Health Check UI
 - Serilog
