@@ -4,30 +4,29 @@ using Serilog.Context;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sample.Serilog.WebApi.Core.Middleware
+namespace Sample.Serilog.WebApi.Core.Middleware;
+
+public class RequestSerilLogMiddleware
 {
-    public class RequestSerilLogMiddleware
+    private readonly RequestDelegate _next;
+
+    public RequestSerilLogMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public RequestSerilLogMiddleware(RequestDelegate next)
+    public Task Invoke(HttpContext context)
+    {
+        using (LogContext.PushProperty("UserName", context?.User?.Identity?.Name ?? "anônimo"))
+        using (LogContext.PushProperty("CorrelationId", GetCorrelationId(context)))
         {
-            _next = next;
+            return _next.Invoke(context);
         }
+    }
 
-        public Task Invoke(HttpContext context)
-        {
-            using (LogContext.PushProperty("UserName", context?.User?.Identity?.Name ?? "anônimo"))
-            using (LogContext.PushProperty("CorrelationId", GetCorrelationId(context)))
-            {
-                return _next.Invoke(context);
-            }
-        }
-
-        private string GetCorrelationId(HttpContext httpContext)
-        {
-            httpContext.Request.Headers.TryGetValue("Cko-Correlation-Id", out StringValues correlationId);
-            return correlationId.FirstOrDefault() ?? httpContext.TraceIdentifier;
-        }
+    private string GetCorrelationId(HttpContext httpContext)
+    {
+        httpContext.Request.Headers.TryGetValue("Cko-Correlation-Id", out StringValues correlationId);
+        return correlationId.FirstOrDefault() ?? httpContext.TraceIdentifier;
     }
 }
