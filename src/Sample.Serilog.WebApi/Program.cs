@@ -12,7 +12,7 @@ using Serilog;
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.AddSerilog(builder.Configuration, "API NoPaper");
+    builder.Host.AddSerilog(builder.Configuration, "API Monitoring");
     Log.Information("Getting the motors running...");
 
     builder.Services.AddRouting(options => options.LowercaseUrls = true);
