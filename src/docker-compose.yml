@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   sample-serilog:
@@ -14,7 +14,7 @@ services:
     - 80:80
     - 5341:5341
    environment:
-    ACCEPT_EULA: Y
+    - ACCEPT_EULA=Y
 
   elasticsearch:
    container_name: elasticsearch
