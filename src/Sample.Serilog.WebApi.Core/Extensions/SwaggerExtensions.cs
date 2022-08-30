@@ -12,7 +12,7 @@ public static class SwaggerExtensions
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample Serilog", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample Logs", Version = "v1" });
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
     }
@@ -22,7 +22,7 @@ public static class SwaggerExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample Serilog");
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample Logs");
             c.RoutePrefix = "swagger";
         });
     }

@@ -1,12 +1,6 @@
 version: '3.4'
 
 services:
-  sample-serilog:
-    image: ${DOCKER_REGISTRY-}sampleserilog
-    build:
-      context: .
-      dockerfile: Sample.Serilog.WebApi/Dockerfile
-
   seq:
    container_name: seq
    image: datalust/seq:latest
@@ -14,7 +8,7 @@ services:
     - 80:80
     - 5341:5341
    environment:
-    ACCEPT_EULA: Y
+    - ACCEPT_EULA=Y
 
   elasticsearch:
    container_name: elasticsearch
